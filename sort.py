@@ -1,5 +1,6 @@
 import os
 import re
+import sys
 import shutil
 from pathlib import Path
 
@@ -85,10 +86,16 @@ def del_empty_dirs(path_dir):
                 del_empty_dirs(a)
 
 def main(path_dir):
+    path_dir = arg
+    if not Path(path_dir).exists():
+        print('[-] Папки не існує')
+    else:
+        sort(path_dir)
+
+def sort(path_dir):
     cur_dir = Path(path_dir)
     dir_path = []
     scan(cur_dir)
-
     for root, dirs, files in os.walk(path_dir):
         for d in dirs:
             if d not in ("Images", "Documents", "Video", "Archives", "Music", "Others"):
@@ -101,10 +108,12 @@ def main(path_dir):
             for suff in dir_suff_dict:
                 if p_file.suffix.lower() in dir_suff_dict[suff]:
                     if suff == 'Archives':
-                        archive_dir = cur_dir / suff
+                        # при використанні строк 112-113 замість строки 114 виникає помилка "No such file or directory:"
+                        #arch_name = f"{normalize(p_file.name[0:-len(p_file.suffix)])}"
+                        #archive_dir = cur_dir / suff / arch_name
+                        archive_dir = cur_dir / suff 
                         archive_dir.mkdir(exist_ok=True)
                         shutil.unpack_archive(p_file, archive_dir)
-                        #os.remove(p_file)
                     else:
                         dir_img = cur_dir / suff
                         dir_img.mkdir(exist_ok=True)
@@ -113,13 +122,12 @@ def main(path_dir):
                     except FileExistsError:
                         p_file.rename(dir_img.joinpath(f'{p_file.name.split(".")[0]}_c{p_file.suffix}'))
                         print(f"Можливо дублікат: {p_file.name}")
-    del_empty_dirs(path_dir)
-    
+        del_empty_dirs(path_dir) 
 
 if __name__ == "__main__":
-    path_dir = input('[+] Введіть папку для сортування: ')
-    if not Path(path_dir).exists():
-        print('[-] Папки нек існує')
-    else:
-        main(path_dir)
-    print('[!] Сортування завершено')
+    path_dir = sys.argv[1]
+    print(f"Start in {path_dir}")
+    arg = Path(path_dir)
+    main(arg.resolve())
+    print("Finished!!!")
+    exit()
