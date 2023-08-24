@@ -109,9 +109,9 @@ def sort(path_dir):
                 if p_file.suffix.lower() in dir_suff_dict[suff]:
                     if suff == 'Archives':
                         # при використанні строк 112-113 замість строки 114 виникає помилка "No such file or directory:"
-                        #arch_name = f"{normalize(p_file.name[0:-len(p_file.suffix)])}"
-                        #archive_dir = cur_dir / suff / arch_name
-                        archive_dir = cur_dir / suff 
+                        arch_name = f"{normalize(p_file.name[0:-len(p_file.suffix)])}"
+                        archive_dir = cur_dir / suff / arch_name
+                        #archive_dir = cur_dir / suff 
                         archive_dir.mkdir(exist_ok=True)
                         shutil.unpack_archive(p_file, archive_dir)
                     else:
