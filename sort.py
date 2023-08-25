@@ -102,27 +102,30 @@ def sort(path_dir):
                 dir_path.append(os.path.join(root, d))
         for file in files:
             p_file = Path(root) / file
-            name_normalize = f"{normalize(p_file.name[0:-len(p_file.suffix)])}{p_file.suffix}"
-            p_file.rename(Path(root) / name_normalize)
-            p_file = Path(root) / name_normalize
             for suff in dir_suff_dict:
                 if p_file.suffix.lower() in dir_suff_dict[suff]:
                     if suff == 'Archives':
-                        # при використанні строк 112-113 замість строки 114 виникає помилка "No such file or directory:"
-                        arch_name = f"{normalize(p_file.name[0:-len(p_file.suffix)])}"
-                        archive_dir = cur_dir / suff / arch_name
-                        #archive_dir = cur_dir / suff 
+                        archive_dir = cur_dir.joinpath(suff)             
+                        base_archive_dir = archive_dir.joinpath(f"{(normalize(p_file.name[0:-len(p_file.suffix)]))}")
                         archive_dir.mkdir(exist_ok=True)
-                        shutil.unpack_archive(p_file, archive_dir)
+                        base_archive_dir.mkdir(exist_ok=True)
+                        shutil.unpack_archive(p_file, base_archive_dir)
+                        os.remove(p_file)
                     else:
-                        dir_img = cur_dir / suff
+                        dir_img = cur_dir.joinpath(suff)
                         dir_img.mkdir(exist_ok=True)
-                    try:
-                        p_file.rename(dir_img.joinpath(p_file.name))
-                    except FileExistsError:
-                        p_file.rename(dir_img.joinpath(f'{p_file.name.split(".")[0]}_c{p_file.suffix}'))
-                        print(f"Можливо дублікат: {p_file.name}")
+                        try:
+                            p_file.rename(dir_img.joinpath(p_file.name))
+                        except FileExistsError:
+                            p_file.rename(dir_img.joinpath(f'{p_file.name.split(".")[0]}_c{p_file.suffix}'))
+                            print(f"Можливо дублікат: {p_file.name}")
         del_empty_dirs(path_dir) 
+    for root, dirs, files in os.walk(path_dir):
+        for file in files:
+            p_file = Path(root) / file
+            name_normalize = f"{normalize(p_file.name[0:-len(p_file.suffix)])}{p_file.suffix}"
+            p_file.rename(Path(root) / name_normalize)
+            
 
 if __name__ == "__main__":
     path_dir = sys.argv[1]
