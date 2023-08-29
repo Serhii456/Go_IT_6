@@ -85,7 +85,10 @@ def del_empty_dirs(path_dir):
             else:
                 del_empty_dirs(a)
 
-def main(path_dir):
+def main():
+    path_dir = sys.argv[1]
+    print(f"Start in {path_dir}")
+    arg = Path(path_dir)
     path_dir = arg
     if not Path(path_dir).exists():
         print('[-] Папки не існує')
@@ -125,12 +128,12 @@ def sort(path_dir):
             p_file = Path(root) / file
             name_normalize = f"{normalize(p_file.name[0:-len(p_file.suffix)])}{p_file.suffix}"
             p_file.rename(Path(root) / name_normalize)
-            
-
-if __name__ == "__main__":
-    path_dir = sys.argv[1]
-    print(f"Start in {path_dir}")
-    arg = Path(path_dir)
-    main(arg.resolve())
     print("Finished!!!")
-    exit()
+
+# if __name__ == "__main__":
+#     path_dir = sys.argv[1]
+#     print(f"Start in {path_dir}")
+#     arg = Path(path_dir)
+#     main(arg.resolve())
+#     print("Finished!!!")
+#     exit()
