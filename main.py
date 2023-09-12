@@ -1,8 +1,9 @@
 from datetime import date, timedelta, datetime
 
-birthday_dict = {}
+
 
 def get_birthdays_per_week(users):
+    birthday_dict = {}
     if not users:
         birthday_dict.clear()
     else:
@@ -20,6 +21,8 @@ def get_birthdays_per_week(users):
                     birthday_dict.setdefault('Monday', []).append(user['name'])
                 else:
                     birthday_dict.setdefault(day_of_week, []).append(user['name'])
+            else:
+                continue
     return birthday_dict
    
 
