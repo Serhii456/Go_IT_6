@@ -1,0 +1,59 @@
+from datetime import datetime, timedelta
+
+def get_birthdays_per_week(users):
+    # Отримуємо поточну дату
+    today = datetime.now()
+
+    # Знаходимо перший день тижня (понеділок)
+    monday = today - timedelta(days=today.weekday())
+
+    # Знаходимо дату через тиждень (наступного понеділка)
+    next_monday = monday + timedelta(weeks=1)
+
+    # Створюємо словник для зберігання ім'ян користувачів за днями тижня
+    birthday_dict = {
+        "Monday": [],
+        "Tuesday": [],
+        "Wednesday": [],
+        "Thursday": [],
+        "Friday": [],
+        "Saturday": [],
+        "Sunday": []
+    }
+
+    # Ітеруємося по користувачам і розподіляємо їх за днями тижня
+    for user in users:
+        birthday = user['birthday']
+        # Перевіряємо, чи день народження користувача потрапляє в наступний тиждень
+        if monday <= birthday < next_monday:
+            # Отримуємо назву дня тижня
+            day_of_week = birthday.strftime("%A")
+            # Додаємо ім'я користувача до відповідного дня тижня
+            birthday_dict[day_of_week].append(user['name'])
+
+    # Виводимо ім'янинників за днями тижня
+    for day, names in birthday_dict.items():
+        if names:
+            print(f"{day}: {', '.join(names)}")
+
+# Приклад вхідних даних (список користувачів)
+users = [
+    {
+        'name': 'John',
+        'birthday': datetime(1990, 9, 15)  # Приклад дня народження (рік, місяць, день)
+    },
+    {
+        'name': 'Inna',
+        'birthday': datetime(1985, 9, 11)
+    },
+    {
+        'name': 'Bob',
+        'birthday': datetime(1995, 8, 25)
+    }
+]
+
+# Викликаємо функцію для виведення ім'янинників
+get_birthdays_per_week(users)
+
+# Викликаємо функцію для виведення користувачів з днями народження на цьому тижні
+get_birthdays_per_week(users)
