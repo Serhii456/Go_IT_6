@@ -1,4 +1,3 @@
-# Функція-декоратор для обробки помилок введення користувача
 def input_error(func):
   def wrapper(*args, **kwargs):
     try:
@@ -6,9 +5,9 @@ def input_error(func):
     except KeyError:
       return "Enter user name"
     except ValueError:
-      return "Give me name and phone please"
+      return "Input a name and phone number please"
     except IndexError:
-      return "Invalid input format. Use 'add', 'change', 'phone', 'show all', or 'good bye'."
+      return "Invalid input format. Use 'hello', 'add', 'change', 'phone', 'show all', 'close', 'exit' or 'good bye'."
   return wrapper
 
 
